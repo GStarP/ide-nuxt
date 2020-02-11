@@ -1,4 +1,6 @@
 
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
+
 module.exports = {
   mode: 'spa',
   /*
@@ -50,6 +52,10 @@ module.exports = {
     ** You can extend webpack config here
     */
     extend (config, ctx) {
+      config.plugins.push(new MonacoWebpackPlugin({
+        languages: ['python', 'java', 'cpp'],
+        features: ['coreCommands', 'suggest']
+      }))
     }
   }
 }

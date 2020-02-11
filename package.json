@@ -11,10 +11,12 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "nuxt": "^2.0.0",
     "cross-env": "^5.2.0",
+    "element-ui": "^2.4.11",
     "express": "^4.16.4",
-    "element-ui": "^2.4.11"
+    "monaco-editor": "^0.20.0",
+    "monaco-editor-webpack-plugin": "^1.8.2",
+    "nuxt": "^2.0.0"
   },
   "devDependencies": {
     "nodemon": "^1.18.9"
