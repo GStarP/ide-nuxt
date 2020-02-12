@@ -26,6 +26,7 @@
     <div class="tool-btm">
       <el-button
         type="primary"
+        @click="commit"
       >提交</el-button>
       <el-button
         class="mr-12"
@@ -38,8 +39,6 @@
 
 <script>
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-// suggest by what you have entered
-import 'monaco-editor/esm/vs/editor/contrib/suggest/suggestController';
 import { Tag, Card, Select, Option, Button } from 'element-ui';
 import { sonarQubeResponse } from '../mock/sonarqube'
 
@@ -53,20 +52,7 @@ export default {
   data () {
     return {
       ide: null,
-      code:
-`package main.java;
-        
-import java.util.List
-        
-/**
- * @author fjj
- * @date 2020/2/7 1:04 PM
- */
-public class Add {
-    public int add(int a, int b) {
-        return 0;
-    }
-}`,
+      code: 'package main.java;\n\nimport java.util.List;\n\n/**\n * @author fjj\n * @date 2020/2/7 1:04 PM\n */\npublic class Add {\n    public int add(int a,int b) {\n        return 0;\n    }\n}\n\n',
       language: 'java',
       langs: ['python', 'java', 'cpp'],
       theme: 'vs',
@@ -78,6 +64,30 @@ public class Add {
     };
   },
   methods: {
+    /**
+     * severity: info-2 warning-4 danger-8
+     */
+    createMarker(severity, message, startLineNumber, endLineNumber, startColumn, endColumn) {
+      return {
+        severity,
+        message,
+        startLineNumber,
+        endLineNumber,
+        startColumn: startColumn + 1,
+        endColumn: endColumn + 1
+      }
+    },
+    showSonarQube(sonar) {
+      let markerList = [];
+      let issues = sonar.components[0].codeSmell.issues;
+      for (let issue of issues) {
+        markerList.push(this.createMarker(8, issue.message, issue.textRange.startLine, issue.textRange.endLine, issue.textRange.startOffset, issue.textRange.endOffset));
+      }
+      monaco.editor.setModelMarkers(this.ide.getModel(), '', markerList);
+    },
+    commit () {
+      this.showSonarQube(sonarQubeResponse);
+    }
   },
   mounted () {
     this.ide = monaco.editor.create(this.$refs.ide, {
@@ -86,7 +96,6 @@ public class Add {
       theme: this.theme,
       ...this.options
     });
-    
   },
   watch: {
     language () {

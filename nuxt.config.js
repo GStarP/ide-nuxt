@@ -54,7 +54,7 @@ module.exports = {
     extend (config, ctx) {
       config.plugins.push(new MonacoWebpackPlugin({
         languages: ['python', 'java', 'cpp'],
-        features: ['coreCommands', 'suggest']
+        features: ['bracketMatching', 'coreCommands', 'find', 'folding', 'hover', 'suggest']
       }))
     }
   }
